@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:taskmanager/screens/userdetails.dart';
 
 void main() {
   runApp(TaskManagerApp());
@@ -10,7 +11,6 @@ class TaskManagerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Task Manager',
-      
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -96,6 +96,17 @@ class _TaskManagerHomePageState extends State<TaskManagerHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Task Manager'),
+        leading: Container(),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => UserDetailsForm()));
+              // Add your logic for opening user details here
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
