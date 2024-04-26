@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:taskmanager/screens/userdetails.dart';
+import 'package:taskmanager/utils/color_utils.dart';
 
 void main() {
   runApp(TaskManagerApp());
@@ -95,74 +96,115 @@ class _TaskManagerHomePageState extends State<TaskManagerHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Task Manager'),
         leading: Container(),
+        title: Text('Task Manager'),
         actions: [
           IconButton(
             icon: Icon(Icons.account_circle),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => UserDetailsForm()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserDetailsForm()),
+              );
               // Add your logic for opening user details here
             },
           ),
         ],
+        backgroundColor: hexStringToColor(
+            "627254"), // Set the background color to transparent
+        elevation: 0, // Remove the shadow
       ),
-      body: Column(
-        children: [
-          Padding(
+      // appBar: AppBar(
+      //   title: Text('Task Manager'),
+      //   leading: Container(),
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(Icons.account_circle),
+      //       onPressed: () {
+      //         Navigator.push(
+      //           context,
+      //           MaterialPageRoute(builder: (context) => UserDetailsForm()),
+      //         );
+      //         // Add your logic for opening user details here
+      //       },
+      //     ),
+      //   ],
+      // ),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              hexStringToColor("627254"),
+              hexStringToColor("76885B"),
+              hexStringToColor("DDDDDD"),
+              hexStringToColor("EEEEEE"),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _taskController,
-              decoration: InputDecoration(
-                hintText: 'Enter a task',
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: _addTask,
-            child: Text('Add Task'),
-          ),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _tasksCollection.snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextField(
+                  controller: _taskController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter a task',
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: _addTask,
+                  child: Text('Add Task'),
+                ),
+                SizedBox(height: 16.0),
+                StreamBuilder(
+                  stream: _tasksCollection.snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
 
-                return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    DocumentSnapshot document = snapshot.data!.docs[index];
-                    String taskId = document.id;
-                    // Access the 'task' field from the document data
-                    String task =
-                        (document.data() as Map<String, dynamic>?)?['task'] ??
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot document = snapshot.data!.docs[index];
+                        String taskId = document.id;
+                        // Access the 'task' field from the document data
+                        String task = (document.data()
+                                as Map<String, dynamic>?)?['task'] ??
                             '';
 
-                    return ListTile(
-                      title: Text(task),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () => _editTask(taskId, task),
+                        return ListTile(
+                          title: Text(task),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: () => _editTask(taskId, task),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: () => _deleteTask(taskId),
+                              ),
+                            ],
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () => _deleteTask(taskId),
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     );
                   },
-                );
-              },
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

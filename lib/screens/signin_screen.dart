@@ -19,14 +19,16 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: 
+      Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-          hexStringToColor("CB2B93"),
-          hexStringToColor("9546C4"),
-          hexStringToColor("5E61F4")
+          hexStringToColor("627254"),
+          hexStringToColor("76885B"),
+          hexStringToColor("DDDDDD"),
+          hexStringToColor("EEEEEE")
         ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: SingleChildScrollView(
           child: Padding(
@@ -39,7 +41,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 30,
                 ),
                 reusableTextField("Enter Email", Icons.person_outline, false,
-                    _emailTextController),
+                     _emailTextController),
                 const SizedBox(
                   height: 20,
                 ),
@@ -77,7 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text("Don't have account?",
-            style: TextStyle(color: Colors.white70)),
+            style: TextStyle(color: Colors.black54)),
         GestureDetector(
           onTap: () {
             Navigator.push(context,
@@ -85,7 +87,8 @@ class _SignInScreenState extends State<SignInScreen> {
           },
           child: const Text(
             " Sign Up",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style:
+                TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
           ),
         )
       ],
@@ -100,7 +103,7 @@ class _SignInScreenState extends State<SignInScreen> {
       child: TextButton(
         child: const Text(
           "Forgot Password?",
-          style: TextStyle(color: Colors.white70),
+          style: TextStyle(color: Colors.black54),
           textAlign: TextAlign.right,
         ),
         onPressed: () => Navigator.push(
