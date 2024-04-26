@@ -166,39 +166,40 @@ class _TaskManagerHomePageState extends State<TaskManagerHomePage> {
                 StreamBuilder(
                   stream: _tasksCollection.snapshots(),
                   builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data?.docs.length ?? 0,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot document =
+                              snapshot.data!.docs[index];
+                          String taskId = document.id;
+                          // Access the 'task' field from the document data
+                          String task = (document.data()
+                                  as Map<String, dynamic>?)?['task'] ??
+                              '';
+
+                          return ListTile(
+                            title: Text(task),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () => _editTask(taskId, task),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () => _deleteTask(taskId),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return CircularProgressIndicator();
                     }
-
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot document = snapshot.data!.docs[index];
-                        String taskId = document.id;
-                        // Access the 'task' field from the document data
-                        String task = (document.data()
-                                as Map<String, dynamic>?)?['task'] ??
-                            '';
-
-                        return ListTile(
-                          title: Text(task),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () => _editTask(taskId, task),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () => _deleteTask(taskId),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
                   },
                 ),
               ],

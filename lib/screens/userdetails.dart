@@ -176,7 +176,7 @@ class _UserDetailsFormState extends State<UserDetailsForm> {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  'Email: ${_auth.currentUser!.email}',
+                  'Email: ${_auth?.currentUser?.email ?? "SEx"}',
                   style: TextStyle(fontSize: 16.0),
                 ),
                 SizedBox(height: 16.0),
