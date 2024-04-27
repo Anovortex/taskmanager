@@ -1,16 +1,28 @@
 # Task Manager
 
-A new Flutter project.
+Flutter Final project for CSE464
+
+## Modules:
+  Authentication: Allow users to sign up, sign in, and reset passwords.
+  Task Management: Create, update, and delete tasks with status (e.g., to-do, in progress, done).
+  User Profile: View and edit user profiles.
+    
+## Features:
+  Firebase Authentication: Implement email/password authentication.
+  Firestore Database: Store tasks and user data.
+  Real-time Updates: Display tasks in real-time using Firestore listeners.
+  CRUD Operations: Implement Create, Read, Update, and Delete operations for tasks.
+
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Clone the repo.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Get Dependencies
+```
+Flutter pub get
+```
+To run the app
+```
+Flutter run
+```
