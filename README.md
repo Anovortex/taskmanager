@@ -2,7 +2,7 @@
 
 Flutter Final project for CSE464
 
-#Task Management App
+# Task Management App
   Modules:
   Authentication: Allow users to sign up, sign in, and reset passwords.
   Task Management: Create, update, and delete tasks with status (e.g., to-do, in progress, done).
