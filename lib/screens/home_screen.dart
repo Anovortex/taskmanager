@@ -32,25 +32,15 @@ class _TaskManagerHomePageState extends State<TaskManagerHomePage> {
 
   TextEditingController _taskController = TextEditingController();
 
-  void _addTask() {
+  void _addTask() async {
     String task = _taskController.text.trim();
     if (task.isNotEmpty) {
-      // Check if the tasks collection exists
-      _firestore.collection('tasks').get().then((snapshot) {
-        if (snapshot.docs.isEmpty) {
-          // Create a new tasks collection
-          _firestore.collection('tasks').doc().set({'task': task});
-        } else {
-          // Add the new task to the existing tasks collection
-          _firestore.collection('tasks').add({'task': task});
-        }
-      }).then((value) {
-        setState(() {
-          _taskController.clear();
-        });
-      }).catchError((error) {
+      try {
+        await _tasksCollection.add({'task': task, 'timestamp': DateTime.now()});
+        _taskController.clear();
+      } catch (error) {
         print('Failed to add task: $error');
-      });
+      }
     }
   }
 
@@ -78,18 +68,20 @@ class _TaskManagerHomePageState extends State<TaskManagerHomePage> {
     );
 
     if (editedTask != null && editedTask.isNotEmpty && editedTask != oldTask) {
-      DocumentReference taskRef = _tasksCollection.doc(taskId);
-      taskRef.update({'task': editedTask}).catchError((error) {
+      try {
+        await _tasksCollection.doc(taskId).update({'task': editedTask});
+      } catch (error) {
         print('Failed to update task: $error');
-      });
+      }
     }
   }
 
   void _deleteTask(String taskId) {
-    DocumentReference taskRef = _tasksCollection.doc(taskId);
-    taskRef.delete().catchError((error) {
+    try {
+      _tasksCollection.doc(taskId).delete();
+    } catch (error) {
       print('Failed to delete task: $error');
-    });
+    }
   }
 
   @override
@@ -114,22 +106,6 @@ class _TaskManagerHomePageState extends State<TaskManagerHomePage> {
             "627254"), // Set the background color to transparent
         elevation: 0, // Remove the shadow
       ),
-      // appBar: AppBar(
-      //   title: Text('Task Manager'),
-      //   leading: Container(),
-      //   actions: [
-      //     IconButton(
-      //       icon: Icon(Icons.account_circle),
-      //       onPressed: () {
-      //         Navigator.push(
-      //           context,
-      //           MaterialPageRoute(builder: (context) => UserDetailsForm()),
-      //         );
-      //         // Add your logic for opening user details here
-      //       },
-      //     ),
-      //   ],
-      // ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -164,21 +140,21 @@ class _TaskManagerHomePageState extends State<TaskManagerHomePage> {
                 ),
                 SizedBox(height: 16.0),
                 StreamBuilder(
-                  stream: _tasksCollection.snapshots(),
+                  stream: _tasksCollection
+                      .orderBy('timestamp', descending: true)
+                      .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      List<DocumentSnapshot>? tasks = snapshot.data?.docs;
                       return ListView.builder(
                         shrinkWrap: true,
-                        itemCount: snapshot.data?.docs.length ?? 0,
+                        itemCount: tasks?.length ?? 0,
                         itemBuilder: (context, index) {
-                          DocumentSnapshot document =
-                              snapshot.data!.docs[index];
+                          DocumentSnapshot document = tasks![index];
                           String taskId = document.id;
-                          // Access the 'task' field from the document data
                           String task = (document.data()
                                   as Map<String, dynamic>?)?['task'] ??
                               '';
-
                           return ListTile(
                             title: Text(task),
                             trailing: Row(
