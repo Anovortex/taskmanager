@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:taskmanager/reusable_widgets/reusable_widget.dart';
 import 'package:taskmanager/screens/home_screen.dart';
@@ -17,20 +16,25 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   TextEditingController _passwordTextController = TextEditingController();
   TextEditingController _emailTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: 
-      Container(
+      body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          hexStringToColor("627254"),
-          hexStringToColor("76885B"),
-          hexStringToColor("DDDDDD"),
-          hexStringToColor("EEEEEE")
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+          gradient: LinearGradient(
+            colors: [
+              hexStringToColor("627254"),
+              hexStringToColor("76885B"),
+              hexStringToColor("DDDDDD"),
+              hexStringToColor("EEEEEE")
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.fromLTRB(
@@ -42,7 +46,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 30,
                 ),
                 reusableTextField("Enter Email", Icons.person_outline, false,
-                     _emailTextController),
+                    _emailTextController),
                 const SizedBox(
                   height: 20,
                 ),
@@ -63,7 +67,18 @@ class _SignInScreenState extends State<SignInScreen> {
                         MaterialPageRoute(
                             builder: (context) => TaskManagerHomePage()));
                   }).onError((error, stackTrace) {
-                    print("Error ${error.toString()}");
+                    if (error is FirebaseAuthException) {
+                      if (error.code == 'user-not-found') {
+                        showErrorDialog(context, 'Incorrect email');
+                      } else if (error.code == 'wrong-password') {
+                        showErrorDialog(context, 'Incorrect password');
+                      } else {
+                        showErrorDialog(context,
+                            error.message ?? 'An unknown error occurred');
+                      }
+                    } else {
+                      showErrorDialog(context, 'An unknown error occurred');
+                    }
                   });
                 }),
                 signUpOption()
@@ -72,6 +87,24 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 
