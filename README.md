@@ -1,5 +1,5 @@
 # Group Number 25
-Name & ID: Asif Hossain Khan (1711411), Abu Bakar Siddique (1731237), Towhidur Rahman (1721820)
+Name & ID: Asif Hossain Khan (1711411), Abu Bakar Siddique (1731237), Towhidur Rahman (1721820).
 
 # Task Manager
 Flutter Final project for CSE464
