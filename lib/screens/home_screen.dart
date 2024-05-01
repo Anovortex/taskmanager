@@ -98,13 +98,11 @@ class _TaskManagerHomePageState extends State<TaskManagerHomePage> {
                 context,
                 MaterialPageRoute(builder: (context) => UserDetailsForm()),
               );
-              // Add your logic for opening user details here
             },
           ),
         ],
-        backgroundColor: hexStringToColor(
-            "627254"), // Set the background color to transparent
-        elevation: 0, // Remove the shadow
+        backgroundColor: hexStringToColor("627254"),
+        elevation: 0,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
