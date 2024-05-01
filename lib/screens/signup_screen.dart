@@ -32,9 +32,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
-            hexStringToColor("CB2B93"),
-            hexStringToColor("9546C4"),
-            hexStringToColor("5E61F4")
+            hexStringToColor("627254"),
+            hexStringToColor("76885B"),
+            hexStringToColor("DDDDDD"),
+            hexStringToColor("EEEEEE")
           ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
           child: SingleChildScrollView(
               child: Padding(
@@ -66,8 +67,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           password: _passwordTextController.text)
                       .then((value) {
                     print("Created New Account");
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TaskManagerHomePage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TaskManagerHomePage()));
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
                   });
